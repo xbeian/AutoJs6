@@ -4,12 +4,12 @@ plugins {
 import java.security.MessageDigest
 
 android {
-    namespace = "com.baidu.paddleocr"
+    namespace = "com.baidu.paddle.lite.ocr"
     ndkVersion '21.1.6352462'
     compileSdk 33
     defaultConfig {
         minSdkVersion 24
-        targetSdkVersion 31
+        targetSdkVersion 33
 
         externalNativeBuild {
             cmake {
@@ -36,7 +36,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+//    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(path: ':libs:org.opencv-4.5.5')
 }
 
@@ -83,4 +83,4 @@ tasks.register('downloadAndExtractArchives', DefaultTask) {
         }
     }
 }
-preBuild.dependsOn downloadAndExtractArchives
+//preBuild.dependsOn downloadAndExtractArchives
