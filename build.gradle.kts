@@ -61,7 +61,8 @@ buildscript {
         ),
     )
 
-    val platform = System.getProperty("idea.paths.selector")
+    val platform =
+        if (System.getProperty("idea.paths.selector") != null) System.getProperty("idea.paths.selector") else "AndroidStudio" // 设置platform默认值为"AndroidStudio"，避免命令行中属性值为null引发异常
     val platformIdentifierForAS = "AndroidStudio"
     val platformIdentifierForIdea = "IntelliJIdea"
 
@@ -96,15 +97,18 @@ buildscript {
     fun printCurrentPlatformInfo() = when {
         isPlatformAS -> {
             val platformNickAbbr = gradlePluginVersionList["as"]!!["abbr"]!![platformVersion]
-            val platformNick = platformNickAbbr?.let { abbr -> platformNicknameForAS[abbr]?.let { " $it" } } ?: ""
+            val platformNick =
+                platformNickAbbr?.let { abbr -> platformNicknameForAS[abbr]?.let { " $it" } } ?: ""
 
             val previewIdentifier = "Preview"
             val isPreview = platformVersion.contains(previewIdentifier, true)
             val previewSuffix = if (isPreview) " ($previewIdentifier)" else ""
-            val niceVersion = if (isPreview) platformVersion.substring(previewIdentifier.length) else platformVersion
+            val niceVersion =
+                if (isPreview) platformVersion.substring(previewIdentifier.length) else platformVersion
 
             "Android Studio$platformNick$previewSuffix | $niceVersion"
         }
+
         isPlatformIdea -> "IntelliJ IDEA $platformVersion"
         else -> "Unknown"
     }.let { println("Platform: $it") }
@@ -132,8 +136,16 @@ buildscript {
         val kotlin = gradlePluginVersionList[platformType]!!["kotlin"]!!
 
         arrayOf(
-            arrayOf("com.android.tools.build:gradle", android[platformVersion], android["fallback"]),
-            arrayOf("org.jetbrains.kotlin:kotlin-gradle-plugin", kotlin[platformVersion], kotlin["fallback"]),
+            arrayOf(
+                "com.android.tools.build:gradle",
+                android[platformVersion],
+                android["fallback"]
+            ),
+            arrayOf(
+                "org.jetbrains.kotlin:kotlin-gradle-plugin",
+                kotlin[platformVersion],
+                kotlin["fallback"]
+            ),
         ).forEach { data ->
             val classpathNotation = "${data[0]}:${data[1] ?: data[2]}"
             val suffix = data[1]?.let { "" } ?: " [fallback]"
