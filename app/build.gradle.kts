@@ -281,6 +281,45 @@ android {
         minSdk = versions.sdkVersionMin
         targetSdk = versions.sdkVersionTarget
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("boolean", "isInrt", "false")
+    }
+
+    flavorDimensions.add("channel")
+    productFlavors {
+        create("app") {
+            dimension = "channel"
+            versionCode = versions.appVersionCode
+            versionName = versions.appVersionName
+            buildConfigField("String", "CHANNEL", "\"app\"")
+            buildConfigField("boolean", "isInrt", "false")
+            manifestPlaceholders.putAll(
+                mapOf(
+                    "CHANNEL" to "app",
+                    "appName" to "@string/app_name",
+                    "intentCategory" to "android.intent.category.LAUNCHER",
+                    "intentCategoryInrt" to "android.intent.category.DEFAULT",
+                    "authorities" to "org.autojs.autojs6.fileprovider"
+                )
+            )
+        }
+
+        create("inrt") {
+            dimension = "channel"
+            applicationIdSuffix = ".inrt"
+            versionCode = versions.appVersionCode
+            versionName = versions.appVersionName
+            buildConfigField("String", "CHANNEL", "\"inrt\"")
+            buildConfigField("boolean", "isInrt", "true")
+            manifestPlaceholders.putAll(
+                mapOf(
+                    "CHANNEL" to "inrt",
+                    "appName" to "AutoJs6.inrt",
+                    "intentCategory" to "android.intent.category.DEFAULT",
+                    "intentCategoryInrt" to "android.intent.category.LAUNCHER",
+                    "authorities" to "org.autojs.autojs6.inrt.fileprovider"
+                )
+            )
+        }
     }
 
     compileOptions {
@@ -305,6 +344,9 @@ android {
             "META-INF/ASL2.0",
             "META-INF/*.kotlin_module",
         ).let { resources.pickFirsts.addAll(it) }
+        jniLibs {
+            useLegacyPackaging = true
+        }
     }
 
     kotlinOptions {
@@ -358,13 +400,22 @@ android {
         javaCompileOptions {
             annotationProcessorOptions {
                 mapOf(
-                    "resourcePackageName" to (this@defaultConfig.applicationId ?: this@Build_gradle.applicationId),
+                    "resourcePackageName" to (this@defaultConfig.applicationId
+                        ?: this@Build_gradle.applicationId),
                     "androidManifestFile" to ("$projectDir/src/main/AndroidManifest.xml")
                 ).let { arguments(it) }
             }
         }
-        buildConfigField("String", "VERSION_DATE", "\"${Utils.getDateString("MMM d, yyyy", "GMT+08:00")}\"")
-        buildConfigField("String", "VSCODE_EXT_REQUIRED_VERSION", "\"${versions.vscodeExtRequiredVersion}\"")
+        buildConfigField(
+            "String",
+            "VERSION_DATE",
+            "\"${Utils.getDateString("MMM d, yyyy", "GMT+08:00")}\""
+        )
+        buildConfigField(
+            "String",
+            "VSCODE_EXT_REQUIRED_VERSION",
+            "\"${versions.vscodeExtRequiredVersion}\""
+        )
     }
 
     applicationVariants.all {
@@ -379,7 +430,9 @@ android {
             }
         outputs
             .map { it as BaseVariantOutputImpl }
-            .forEach { it.outputFileName = Utils.getOutputFileName(this@all as ApplicationVariantImpl, it) }
+            .forEach {
+                it.outputFileName = Utils.getOutputFileName(this@all as ApplicationVariantImpl, it)
+            }
     }
 
     splits {
@@ -510,7 +563,13 @@ class Versions(filePath: String) {
         "Version name: $appVersionName",
         "Version code: $appVersionCode${" [auto-incremented]".takeIf { isBuildNumberAutoIncremented } ?: ""}",
         "SDK versions: min [$sdkVersionMin] / target [$sdkVersionTarget] / compile [$sdkVersionCompile]",
-        "Java version: $javaVersion${" [fallback]".takeUnless { javaVersion.isCompatibleWith(JavaVersion.toVersion(javaVersionRaw)) } ?: ""}",
+        "Java version: $javaVersion${
+            " [fallback]".takeUnless {
+                javaVersion.isCompatibleWith(
+                    JavaVersion.toVersion(javaVersionRaw)
+                )
+            } ?: ""
+        }",
     ).forEach { println(it) }
 
     fun handleIfNeeded(project: Project) = assembleTargets.forEach {
@@ -520,7 +579,13 @@ class Versions(filePath: String) {
             project.gradle.taskGraph.whenReady(object : Action<TaskExecutionGraph> {
                 override fun execute(taskGraph: TaskExecutionGraph) {
                     for (buildType in targetBuildType) {
-                        if (taskGraph.hasTask(Utils.getAssembleFullTaskName(targetName, buildType))) {
+                        if (taskGraph.hasTask(
+                                Utils.getAssembleFullTaskName(
+                                    targetName,
+                                    buildType
+                                )
+                            )
+                        ) {
                             return appendToTask(project, buildType)
                         }
                     }
@@ -540,7 +605,8 @@ object Utils {
 
     fun getDateString(format: String, zone: String): String {
         // e.g. May 23, 2011
-        return SimpleDateFormat(format).apply { timeZone = TimeZone.getTimeZone(zone) }.format(Date())
+        return SimpleDateFormat(format).apply { timeZone = TimeZone.getTimeZone(zone) }
+            .format(Date())
     }
 
     fun getOutputFileName(variant: ApplicationVariantImpl, output: BaseVariantOutputImpl): String {
@@ -554,7 +620,8 @@ object Utils {
 
     fun getAssembleTaskName(buildType: String) = "assemble${capitalize(buildType)}"
 
-    fun getAssembleFullTaskName(name: String, buildType: String) = ":$name:${getAssembleTaskName(buildType)}"
+    fun getAssembleFullTaskName(name: String, buildType: String) =
+        ":$name:${getAssembleTaskName(buildType)}"
 
     fun digestCRC32(file: File): String {
         val fis = FileInputStream(file)
