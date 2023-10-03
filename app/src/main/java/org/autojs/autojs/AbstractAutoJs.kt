@@ -20,6 +20,7 @@ import org.autojs.autojs.engine.RootAutomatorEngine
 import org.autojs.autojs.engine.ScriptEngineManager
 import org.autojs.autojs.engine.ScriptEngineService
 import org.autojs.autojs.engine.ScriptEngineServiceBuilder
+import org.autojs.autojs.inrt.autojs.XJavaScriptEngine
 import org.autojs.autojs.pref.Pref.registerOnSharedPreferenceChangeListener
 import org.autojs.autojs.rhino.InterruptibleAndroidContextFactory
 import org.autojs.autojs.runtime.ScriptRuntime
@@ -43,6 +44,7 @@ import java.io.File
  * Created by Stardust on 2017/11/29.
  * Modified by SuperMonster003 as of Jun 10, 2022.
  * Transformed by SuperMonster003 on Oct 10, 2022.
+ * Modified by LZX284 (https://github.com/LZX284) as of Sep 30, 2023.
  */
 abstract class AbstractAutoJs protected constructor(protected val application: Application) {
 
@@ -58,9 +60,17 @@ abstract class AbstractAutoJs protected constructor(protected val application: A
     val infoProvider = ActivityInfoProvider(context)
     val scriptEngineManager = ScriptEngineManager(context)
     val scriptEngineService: ScriptEngineService = run {
-        scriptEngineManager.registerEngine(JavaScriptSource.ENGINE) {
-            LoopBasedJavaScriptEngine(context).also { engine ->
-                engine.runtime = createRuntime().also { runtime = it }
+        if (org.autojs.autojs6.BuildConfig.isInrt) {
+            scriptEngineManager.registerEngine(JavaScriptSource.ENGINE) {
+                XJavaScriptEngine(context).also { engine ->
+                    engine.runtime = createRuntime().also { runtime = it }
+                }
+            }
+        } else {
+            scriptEngineManager.registerEngine(JavaScriptSource.ENGINE) {
+                LoopBasedJavaScriptEngine(context).also { engine ->
+                    engine.runtime = createRuntime().also { runtime = it }
+                }
             }
         }
         initContextFactory()

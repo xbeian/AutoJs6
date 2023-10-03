@@ -116,32 +116,37 @@
     <application
             android:name="org.autojs.autojs.App"
             android:allowBackup="false"
-            android:label="@string/app_name"
-            android:icon="@drawable/autojs6_material"
-            android:largeHeap="true"
+            android:extractNativeLibs="true"
             android:hardwareAccelerated="true"
+            android:icon="@drawable/autojs6_material"
+            android:label="${appName}"
+            android:largeHeap="true"
+            android:requestLegacyExternalStorage="true"
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true"
-            android:requestLegacyExternalStorage="true"
             tools:ignore="DataExtractionRules">
 
         <meta-data
                 android:name="android.max_aspect"
                 android:value="2.1" />
 
+        <meta-data
+                android:name="CHANNEL"
+                android:value="${CHANNEL}" />
+
         <activity
                 android:name="org.autojs.autojs.ui.splash.SplashActivity"
-                android:theme="@style/AppTheme.Splash"
-                android:label="@string/app_name"
-                android:icon="@drawable/autojs6_material"
                 android:exported="true"
+                android:icon="@drawable/autojs6_material"
+                android:label="@string/app_name"
+                android:theme="@style/AppTheme.Splash"
                 tools:ignore="RedundantLabel">
             <intent-filter>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-
                 <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="${intentCategory}" />
 
             </intent-filter>
         </activity>
@@ -154,21 +159,21 @@
 
         <activity
                 android:name="org.autojs.autojs.external.shortcut.ShortcutActivity"
+                android:exported="true"
                 android:taskAffinity="org.autojs.autojs.external.shortcut.ShortcutActivity"
-                android:theme="@android:style/Theme.NoDisplay"
-                android:exported="true">
+                android:theme="@android:style/Theme.NoDisplay">
             <intent-filter>
 
-                <category android:name="android.intent.category.DEFAULT" />
-
                 <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
 
             </intent-filter>
         </activity>
 
         <provider
                 android:name="androidx.core.content.FileProvider"
-                android:authorities="org.autojs.autojs6.fileprovider"
+                android:authorities="${authorities}"
                 android:exported="false"
                 android:grantUriPermissions="true">
             <meta-data
@@ -212,17 +217,17 @@
 
         <activity
                 android:name="org.autojs.autojs.ui.doc.DocumentationActivity"
-                android:label="@string/docs_app_name"
+                android:exported="true"
                 android:icon="@drawable/ic_docs_app"
+                android:label="@string/docs_app_name"
                 android:taskAffinity="org.autojs.autojs.ui.doc.DocumentationActivity"
-                android:theme="@style/AppTheme.FullScreen"
-                android:exported="true">
+                android:theme="@style/AppTheme.FullScreen">
 
             <intent-filter>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-
                 <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
 
             </intent-filter>
 
@@ -264,10 +269,10 @@
 
         <service
                 android:name="org.autojs.autojs.external.tile.LayoutBoundsTile"
+                android:exported="true"
                 android:icon="@drawable/ic_circular_menu_bounds"
                 android:label="@string/text_inspect_layout_bounds"
-                android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
-                android:exported="true">
+                android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
 
             <meta-data
                     android:name="android.service.quicksettings.ACTIVE_TILE"
@@ -281,10 +286,10 @@
 
         <service
                 android:name="org.autojs.autojs.external.tile.LayoutHierarchyTile"
+                android:exported="true"
                 android:icon="@drawable/ic_circular_menu_hierarchy"
                 android:label="@string/text_inspect_layout_hierarchy"
-                android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
-                android:exported="true">
+                android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
 
             <meta-data
                     android:name="android.service.quicksettings.ACTIVE_TILE"
@@ -402,9 +407,9 @@
 
         <activity
                 android:name="org.autojs.autojs.external.open.EditIntentActivity"
+                android:exported="true"
                 android:icon="@drawable/autojs6_material"
-                android:label="@string/text_edit_script"
-                android:exported="true">
+                android:label="@string/text_edit_script">
             <intent-filter>
 
                 <action android:name="android.intent.action.VIEW" />
@@ -428,11 +433,11 @@
 
         <activity
                 android:name="org.autojs.autojs.external.open.RunIntentActivity"
+                android:exported="true"
                 android:icon="@drawable/autojs6_material"
                 android:label="@string/text_run_script"
                 android:taskAffinity="org.autojs.autojs.external.open.RunIntentActivity"
-                android:theme="@android:style/Theme.NoDisplay"
-                android:exported="true">
+                android:theme="@android:style/Theme.NoDisplay">
             <intent-filter>
 
                 <action android:name="android.intent.action.VIEW" />
@@ -456,10 +461,10 @@
 
         <activity
                 android:name="org.autojs.autojs.external.open.ImportIntentActivity"
+                android:exported="true"
                 android:icon="@drawable/autojs6_material"
                 android:label="@string/text_import_script"
-                android:theme="@style/AppTheme.Transparent"
-                android:exported="true">
+                android:theme="@style/AppTheme.Transparent">
             <intent-filter>
 
                 <action android:name="android.intent.action.VIEW" />
@@ -483,9 +488,9 @@
 
         <service
                 android:name="org.autojs.autojs.core.notification.NotificationListenerService"
+                android:exported="false"
                 android:label="@string/app_name"
-                android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
-                android:exported="false">
+                android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
@@ -546,8 +551,8 @@
 
         <service
                 android:name="org.autojs.autojs.core.accessibility.AccessibilityService"
-                android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
-                android:exported="true">
+                android:exported="true"
+                android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
 
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
@@ -563,6 +568,21 @@
                 android:name="org.autojs.autojs.core.image.capture.ScreenCapturerForegroundService"
                 android:enabled="true"
                 android:foregroundServiceType="mediaProjection" />
+
+        <activity
+                android:name="org.autojs.autojs.inrt.SplashActivity"
+                android:exported="true"
+                android:theme="@style/AppTheme.Splash">
+            <intent-filter tools:ignore="ExtraText">
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="${intentCategoryInrt}" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="org.autojs.autojs.inrt.LogActivity" />
+
+        <activity android:name="org.autojs.autojs.inrt.SettingsActivity" />
 
         <!-- This provider is required by Shizuku, remove this if your app only supports Sui -->
         <provider

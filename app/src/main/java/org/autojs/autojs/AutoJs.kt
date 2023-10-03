@@ -37,8 +37,9 @@ import java.util.concurrent.Executors
  * Created by Stardust on 2017/4/2.
  * Modified by SuperMonster003 as of Dec 1, 2021.
  * Transformed by SuperMonster003 on Oct 10, 2022.
+ * Modified by LZX284 (https://github.com/LZX284) as of Sep 30, 2023.
  */
-class AutoJs private constructor(private val appContext: Application) : AbstractAutoJs(appContext) {
+open class AutoJs(private val appContext: Application) : AbstractAutoJs(appContext) {
 
     // @Thank to Zen2H
     private val printExecutor = Executors.newSingleThreadExecutor()
