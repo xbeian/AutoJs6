@@ -61,10 +61,11 @@ buildscript {
         ),
     )
 
-    val platform =
-        if (System.getProperty("idea.paths.selector") != null) System.getProperty("idea.paths.selector") else "AndroidStudio" // 设置platform默认值为"AndroidStudio"，避免命令行中属性值为null引发异常
     val platformIdentifierForAS = "AndroidStudio"
     val platformIdentifierForIdea = "IntelliJIdea"
+
+    /* Null safety. */
+    val platform = System.getProperty("idea.paths.selector") ?: platformIdentifierForAS
 
     val isPlatformAS = platform.startsWith(platformIdentifierForAS)
     val isPlatformIdea = platform.startsWith(platformIdentifierForIdea)
@@ -97,18 +98,15 @@ buildscript {
     fun printCurrentPlatformInfo() = when {
         isPlatformAS -> {
             val platformNickAbbr = gradlePluginVersionList["as"]!!["abbr"]!![platformVersion]
-            val platformNick =
-                platformNickAbbr?.let { abbr -> platformNicknameForAS[abbr]?.let { " $it" } } ?: ""
+            val platformNick = platformNickAbbr?.let { abbr -> platformNicknameForAS[abbr]?.let { " $it" } } ?: ""
 
             val previewIdentifier = "Preview"
             val isPreview = platformVersion.contains(previewIdentifier, true)
             val previewSuffix = if (isPreview) " ($previewIdentifier)" else ""
-            val niceVersion =
-                if (isPreview) platformVersion.substring(previewIdentifier.length) else platformVersion
+            val niceVersion = if (isPreview) platformVersion.substring(previewIdentifier.length) else platformVersion
 
             "Android Studio$platformNick$previewSuffix | $niceVersion"
         }
-
         isPlatformIdea -> "IntelliJ IDEA $platformVersion"
         else -> "Unknown"
     }.let { println("Platform: $it") }
