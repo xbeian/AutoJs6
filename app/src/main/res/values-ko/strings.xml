@@ -678,6 +678,7 @@
     <string name="text_formatting_completed">포맷 완료</string>
     <string name="text_failed_to_format">포맷 실패</string>
     <string name="text_comment">논평</string>
+    <string name="text_template_apk_path">템플릿 APK 경로</string>
 
     <plurals name="text_items_total_sum">
         <item quantity="one">총: %d 항목</item>

@@ -678,6 +678,7 @@
     <string name="text_formatting_completed">Formateo completado</string>
     <string name="text_failed_to_format">Error de formato</string>
     <string name="text_comment">Comente</string>
+    <string name="text_template_apk_path">Ruta de acceso de APK de plantilla</string>
 
     <plurals name="text_items_total_sum">
         <item quantity="one">Total: %d artículo</item>
