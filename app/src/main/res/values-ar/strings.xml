@@ -678,6 +678,7 @@
     <string name="text_formatting_completed">اكتمل التنسيق</string>
     <string name="text_failed_to_format">فشل التنسيق</string>
     <string name="text_comment">تعليق</string>
+    <string name="text_template_apk_path">قالب مسار APK</string>
 
     <plurals name="text_items_total_sum">
         <item quantity="one">المجموع: عنصر واحد</item>

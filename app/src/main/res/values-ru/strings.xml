@@ -678,6 +678,7 @@
     <string name="text_formatting_completed">Форматирование завершено</string>
     <string name="text_failed_to_format">Не удалось отформатировать</string>
     <string name="text_comment">Комментарий</string>
+    <string name="text_template_apk_path">Шаблон APK-путь</string>
 
     <plurals name="text_items_total_sum">
         <item quantity="one">Всего: %d элемент</item>

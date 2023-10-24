@@ -678,6 +678,7 @@
     <string name="text_formatting_completed">格式化已完成</string>
     <string name="text_failed_to_format">格式化失敗</string>
     <string name="text_comment">註釋</string>
+    <string name="text_template_apk_path">模板APK路徑</string>
 
     <plurals name="text_items_total_sum">
         <item quantity="other">共計: %d 項</item>

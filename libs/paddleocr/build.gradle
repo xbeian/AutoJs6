@@ -4,17 +4,19 @@ plugins {
 import java.security.MessageDigest
 
 android {
-    namespace = "com.baidu.paddleocr"
+    namespace = "com.baidu.paddle.lite.ocr"
     ndkVersion '21.1.6352462'
     compileSdk 33
     defaultConfig {
-        minSdkVersion 24
-        targetSdkVersion 31
+        // minSdk 默认为 23，这里修改为与AutoJS6最低SDK版本一致的 24。
+        minSdk 24
+        targetSdk 33
 
         externalNativeBuild {
             cmake {
                 cppFlags "-std=c++11 -frtti -fexceptions -Wno-format"
-                arguments '-DANDROID_PLATFORM=android-23', '-DANDROID_STL=c++_shared' ,"-DANDROID_ARM_NEON=TRUE"
+                // '-DANDROID_PLATFORM' 默认为'android-23'，这里修改为与AutoJS6最低SDK版本一致的 24。
+                arguments '-DANDROID_PLATFORM=android-24', '-DANDROID_STL=c++_shared' ,"-DANDROID_ARM_NEON=TRUE"
             }
         }
         ndk {
@@ -36,7 +38,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+//    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(path: ':libs:org.opencv-4.5.5')
 }
 
@@ -83,4 +85,4 @@ tasks.register('downloadAndExtractArchives', DefaultTask) {
         }
     }
 }
-preBuild.dependsOn downloadAndExtractArchives
+//preBuild.dependsOn downloadAndExtractArchives
